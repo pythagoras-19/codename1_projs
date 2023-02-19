@@ -1,5 +1,5 @@
 /**
- * 
+ * Fixed class that is the parent of our fixed objects like FoodStation and Flag
  */
 package com.mycompany.myapp;
 
@@ -13,11 +13,7 @@ import com.codename1.charts.util.ColorUtil;
  */
 public abstract class Fixed extends GameObject {
 
-	/**
-	 * 
-	 */
 	public Fixed(int size, Point location, int color) {
-		// TODO Auto-generated constructor stub
 		super(size, location, color);
 	}
 	
