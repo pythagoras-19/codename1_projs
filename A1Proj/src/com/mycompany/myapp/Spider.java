@@ -1,5 +1,6 @@
 /**
- * 
+ * This is the implementation of the Spider class.
+ * Unlike the Ant, the Spiders is not steerable and therefore cannot change its heading from the user.
  */
 package com.mycompany.myapp;
 
@@ -9,47 +10,28 @@ import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
 /**
  * @author mchristiansen
- *
  */
 public class Spider extends Movable {
 
 	/**
-	 * 
+	 * Spider will call its parent Movable to create its object.
 	 */
 	public Spider(int size, Point location, int color) {
-		// TODO Auto-generated constructor stub
 		super(size, location, color);
 	}
 	
+	/**
+	 * Cannot change its color after initial instantiation.
+	 */
 	public void setColor() {
-		// TODO verify empty body override
 	}
 	
+	/**
+	 * After we update the Spiders location based on its speed and heading we will make sure that Point
+	 * is not off the map. If it is off the map we will turn the Spider around and move it.
+	 */
 	public void move() {
-		// TODO override specific to spider	
-		float deltaX = (float) Math.cos(Math.toRadians(this.getHeading())) * this.getSpeed();
-		float deltaY = (float) Math.sin(Math.toRadians(this.getHeading())) * this.getSpeed();
-		Point newPoint = new Point(super.getLocation().getX() + deltaX, super.getLocation().getY() + deltaY);
-		this.setLocation(newPoint);
-		/*
-		 * Below we are dealing with the case of getting to the edge of the map.
-		 */
-		if (this.getLocation().getX() >= 1000) {
-			super.setHeading(super.getHeading() - 180);
-			this.move();
-		}
-		if (this.getLocation().getY() >= 1000) {
-			super.setHeading(super.getHeading() - 180);
-			this.move();
-		}
-		if (this.getLocation().getX() <= 0) {
-			super.setHeading(super.getHeading() + 180);
-			this.move();
-		}
-		if (this.getLocation().getY() <= 0) {
-			super.setHeading(super.getHeading() + 180);
-			this.move();
-		}
+		super.move()
 	}
 	
 	public void addToTheWorldVector(GameObject obj) {
