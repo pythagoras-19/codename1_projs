@@ -35,7 +35,30 @@ public abstract class Movable extends GameObject {
 		}
 	}
 	
-	public void move(int heading, int speed) {
+	public void move() {
+		float deltaX = (float) Math.cos(Math.toRadians(this.getHeading())) * this.getSpeed();
+		float deltaY = (float) Math.sin(Math.toRadians(this.getHeading())) * this.getSpeed();
+		Point newPoint = new Point(this.getLocation().getX() + deltaX, this.getLocation().getY() + deltaY);
+		this.setLocation(newPoint);
+		/*
+		 * Below we are dealing with the case of getting to the edge of the map.
+		 */
+		if (this.getLocation().getX() >= 1000) {
+			this.setHeading(this.getHeading() - 180);
+			this.move();
+		}
+		if (this.getLocation().getY() >= 1000) {
+			this.setHeading(this.getHeading() - 180);
+			this.move();
+		}
+		if (this.getLocation().getX() <= 0) {
+			this.setHeading(this.getHeading() + 180);
+			this.move();
+		}
+		if (this.getLocation().getY() <= 0) {
+			this.setHeading(this.getHeading() + 180);
+			this.move();
+		}
 	}
 	
 	public int getColor() {
