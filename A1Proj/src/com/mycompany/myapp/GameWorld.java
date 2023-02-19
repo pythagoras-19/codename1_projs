@@ -1,5 +1,5 @@
 /**
- * 
+ * GameWorld class where the GameWorld items will be updated and be used as a way to interface with GameObjects.
  */
 package com.mycompany.myapp;
 
@@ -39,7 +39,10 @@ import java.util.Random;
 public class GameWorld {
 
 	/**
-	 * 
+	 * Here we are creating an ArrayList to store all the GameObjects that the user will be using the play the game.
+	 * We also have antLivesLeft which is exit criteria from the game.
+	 * The variable gameClock is used to track the total time the user is playing the game.
+	 * The ArrayList seqNums holds the sequence numbers from the flags and offers access to the sequence nums.
 	 */
 	private ArrayList<GameObject> theWorldVector = new ArrayList<GameObject>(); // TODO: Rename?
 	private int antLivesLeft;
@@ -353,6 +356,4 @@ public class GameWorld {
 	public void exit() {
 		System.out.println("Are you sure you want to exit? Hit 'y' or 'n'.");
 	}
-	//additional methods here to manipulate world objects and related game state data
-
 }
