@@ -61,8 +61,26 @@ public class Ant extends Movable implements ISteerable {
 		float deltaX = (float) Math.cos(Math.toRadians(this.getHeading())) * this.getSpeed();
 		float deltaY = (float) Math.sin(Math.toRadians(this.getHeading())) * this.getSpeed();
 		Point newPoint = new Point(super.getLocation().getX() + deltaX, super.getLocation().getY() + deltaY);
-		// TODO: IF YOU GET TO THE EDGE OF THE MAP ... DO WHAT
 		this.setLocation(newPoint);
+		/*
+		 * Below we are dealing with the case of getting to the edge of the map.
+		 */
+		if (this.getLocation().getX() >= 1000) {
+			super.setHeading(super.getHeading() - 180);
+			this.move();
+		}
+		if (this.getLocation().getY() >= 1000) {
+			super.setHeading(super.getHeading() - 180);
+			this.move();
+		}
+		if (this.getLocation().getX() <= 0) {
+			super.setHeading(super.getHeading() + 180);
+			this.move();
+		}
+		if (this.getLocation().getY() <= 0) {
+			super.setHeading(super.getHeading() + 180);
+			this.move();
+		}
 	}
 	
 	public void addToTheWorldVector(GameObject obj) {
@@ -143,5 +161,4 @@ public class Ant extends Movable implements ISteerable {
 				" speed=" + this.getSpeed() + " size=" + this.getSize() + " maxSpeed=" + 
 				this.getMaximumSpeed() + " foodConsumptionRate=" + this.getFoodConsumptionRate() );
 	}
-
 }
