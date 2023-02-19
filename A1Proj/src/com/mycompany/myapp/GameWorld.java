@@ -202,7 +202,8 @@ public class GameWorld {
 		for (int i=0; i < getTheWorldVector().size(); i++) {
 			if (theWorldVector.get(i) instanceof Ant) {
 				Ant aObj = (Ant) theWorldVector.get(i);
-				aObj.setHeading(aObj.getHeading() -5);
+				//aObj.setHeading(aObj.getHeading() -5);
+				aObj.steer(aObj.getHeading() - 5);
 			}
 		}
 	}
@@ -211,7 +212,8 @@ public class GameWorld {
 		for (int i=0; i < getTheWorldVector().size(); i++) {
 			if (theWorldVector.get(i) instanceof Ant) {
 				Ant aObj = (Ant) theWorldVector.get(i);
-				aObj.setHeading(aObj.getHeading() + 5);
+				//aObj.setHeading(aObj.getHeading() + 5);
+				aObj.steer(aObj.getHeading() + 5);
 			}
 		}
 	}
@@ -260,7 +262,7 @@ public class GameWorld {
 							//FoodStation newFoodStation = new FoodStation(newFoodStationSize, newFoodStationLocation, newFoodStationColor);
 							FoodStation newFS = new FoodStation(newFoodStationSize, newFoodStationLocation, newFoodStationColor);
 							theWorldVector.add(newFS);
-							foodStationCounter +=1;
+							foodStationCounter += 1;
 						}
 					}
 				}
