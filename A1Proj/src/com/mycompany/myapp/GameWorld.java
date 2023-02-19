@@ -170,15 +170,19 @@ public class GameWorld {
 	/**
 	 * Tick the clock.
 	 * The @class Movable objects move() according to their heading and speed.
-	 * When the Ant moves its food level will decrease. If the food level reaches 0, the Ant must lose a life.
+	 * When the Ant moves, its food level will decrease. If the food level reaches 0, the Ant must lose a life.
 	 * If the Ant has no lives left, the game finishes. If it has lives left, the GameWorld is reinitialized.
 	 */
 	public void tick() {
+		this.increaseGameClock(); // tick the clock
+		//Move the Movable objects
 		for (int i=0; i < getTheWorldVector().size(); i++) {
-			if (theWorldVector.get(i) instanceof Spider) {
-				Spider sObj = (Spider) theWorldVector.get(i);
-				sObj.move();
+			if (theWorldVector.get(i) instanceof Movable) {
+				Movable mObj = (Movable) theWorldVector.get(i);
+				mObj.move();
 			}
+			// The Ant's status effects the Game's continuation 
+			// Here we calculate the new values for the Ant
 			if (theWorldVector.get(i) instanceof Ant) {
 				Ant aObj = (Ant) theWorldVector.get(i);
 				aObj.move();
@@ -195,16 +199,18 @@ public class GameWorld {
 						for (int k=0; k < getTheWorldVector().size(); k++) {
 							this.theWorldVector.set(k, null);
 						}
-						System.gc();
-						this.init(); // still has a life left, reinitialize game world but keep clock
-						return;
+					System.gc();
+					this.init(); // still has a life left, reinitialize game world but keep clock
+					return;
 					}
 				}
 			}
 		}
-		this.increaseGameClock(); // tick the clock
 	}
 	
+	/**
+	 * Slow down the speed of the Ant.
+	 */
 	public void brake() {
 		for (int i=0; i < getTheWorldVector().size(); i++) {
 			if (theWorldVector.get(i) instanceof Ant) {
@@ -216,6 +222,9 @@ public class GameWorld {
 		}
 	}
 	
+	/**
+	 * Steer the Ant left.
+	 */
 	public void left() {
 		for (int i=0; i < getTheWorldVector().size(); i++) {
 			if (theWorldVector.get(i) instanceof Ant) {
@@ -226,6 +235,9 @@ public class GameWorld {
 		}
 	}
 	
+	/**
+	 * Steer the Ant right.
+	 */
 	public void right() {
 		for (int i=0; i < getTheWorldVector().size(); i++) {
 			if (theWorldVector.get(i) instanceof Ant) {
@@ -236,6 +248,11 @@ public class GameWorld {
 		}
 	}
 	
+	/**
+	 * Execute a collision with a flag and update the Ant's lastFlagReached.
+	 * @param flag which is the desired flag reached.
+	 * Must hit the the next sequential flag on the path for it to count.
+	 */
 	public void collidedFlag(int flag) {
 		for (int i=0; i < getTheWorldVector().size(); i++) {
 			if (theWorldVector.get(i) instanceof Ant) {
