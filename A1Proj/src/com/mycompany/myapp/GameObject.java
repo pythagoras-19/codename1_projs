@@ -1,5 +1,6 @@
 /**
- * 
+ * GameObject class that deals with all Movable and Fixed GameObjects in our game.
+ * This is the parent class of Movable and Fixed.
  */
 package com.mycompany.myapp;
 
@@ -15,17 +16,14 @@ import com.codename1.charts.util.ColorUtil;
 public abstract class GameObject extends GameWorld {
 
 	/**
+	 * Size, location, and color are main elements of creating a GameObject.
 	 * 
 	 */
 	private int size;
 	private Point location;
 	private int color;
-	private ArrayList<GameObject> theWorldVector;
-	
-	// public GameObject() {}
 	
 	public GameObject(int size, Point location, int color) {
-		// TODO Auto-generated constructor stub
 		this.size = size;
 		this.setLocation(location);
 		this.setColor(color);
@@ -47,14 +45,10 @@ public abstract class GameObject extends GameWorld {
 	}
 	
 	public void setColor(int color) {
-		// TODO FINISH ME
-		// not sure
 		this.color = color;
 	}
 	
 	public int getColor() {
 		return this.color;
 	}
-	
-
 }
