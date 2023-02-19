@@ -9,5 +9,5 @@ package com.mycompany.myapp;
  */
 public interface ISteerable {
 
-	public void steer();
+	public void steer(int heading);
 }
