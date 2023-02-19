@@ -1,5 +1,6 @@
 /**
- * 
+ * Movable is a class that deals with GameObjects that can move within the GameWorld.
+ * Parent of Ant and Spider.
  */
 package com.mycompany.myapp;
 
@@ -14,7 +15,7 @@ import java.util.Random;
 public abstract class Movable extends GameObject {
 
 	/**
-	 * 
+	 * Heading and speed are necessary items to determine movement of GameObjects.
 	 */
 	private int heading;
 	private int speed;
