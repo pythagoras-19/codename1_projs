@@ -83,29 +83,7 @@ public class Ant extends Movable implements ISteerable {
 	 * We also need to deal with the case the Ant gets to edge of map. We will turn the ant around and move() it again.
 	 */
 	public void move() {
-		float deltaX = (float) Math.cos(Math.toRadians(this.getHeading())) * this.getSpeed();
-		float deltaY = (float) Math.sin(Math.toRadians(this.getHeading())) * this.getSpeed();
-		Point newPoint = new Point(super.getLocation().getX() + deltaX, super.getLocation().getY() + deltaY);
-		this.setLocation(newPoint);
-		/*
-		 * Below we are dealing with the case of getting to the edge of the map.
-		 */
-		if (this.getLocation().getX() >= 1000) {
-			super.setHeading(super.getHeading() - 180);
-			this.move();
-		}
-		if (this.getLocation().getY() >= 1000) {
-			super.setHeading(super.getHeading() - 180);
-			this.move();
-		}
-		if (this.getLocation().getX() <= 0) {
-			super.setHeading(super.getHeading() + 180);
-			this.move();
-		}
-		if (this.getLocation().getY() <= 0) {
-			super.setHeading(super.getHeading() + 180);
-			this.move();
-		}
+		super.move();
 	}
 	
 	/**
@@ -243,4 +221,5 @@ public class Ant extends Movable implements ISteerable {
 				" speed=" + this.getSpeed() + " size=" + this.getSize() + " maxSpeed=" + 
 				this.getMaximumSpeed() + " foodConsumptionRate=" + this.getFoodConsumptionRate() );
 	}
+
 }
