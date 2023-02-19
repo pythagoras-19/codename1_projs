@@ -152,11 +152,6 @@ public class GameWorld {
 	}
 	
 	public void tick() {
-		/* TODO Spiders update their heading 
-		 * TODO all movable objects are told to update their positions according to their current heading and speed
-		 * TODO the ant's food level is reduced by the amount indicated by its foodConsumptionRate
-		 * TODO elapsed time "game clock" is incremented by one --> game clock is an int variable that is incremented by 1
-		 */
 		for (int i=0; i < getTheWorldVector().size(); i++) {
 			if (theWorldVector.get(i) instanceof Spider) {
 				Spider sObj = (Spider) theWorldVector.get(i);
@@ -180,6 +175,7 @@ public class GameWorld {
 						}
 						System.gc();
 						this.init(); // still has a life left, reinitialize game world but keep clock
+						return;
 					}
 				}
 			}
