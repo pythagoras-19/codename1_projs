@@ -298,6 +298,7 @@ public class GameWorld {
 						}
 						System.gc();
 						this.init(); // still has a life left, reinitialize game world but keep clock
+						return;
 					}
 				}
 			}
