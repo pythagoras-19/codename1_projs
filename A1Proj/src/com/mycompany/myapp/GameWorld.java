@@ -260,7 +260,7 @@ public class GameWorld {
 							//FoodStation newFoodStation = new FoodStation(newFoodStationSize, newFoodStationLocation, newFoodStationColor);
 							FoodStation newFS = new FoodStation(newFoodStationSize, newFoodStationLocation, newFoodStationColor);
 							theWorldVector.add(newFS);
-							break;
+							foodStationCounter +=1;
 						}
 					}
 				}
