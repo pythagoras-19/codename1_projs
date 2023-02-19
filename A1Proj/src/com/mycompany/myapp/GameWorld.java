@@ -106,6 +106,11 @@ public class GameWorld {
 		addToTheWorldVector(foodStation2);
 	}
 	
+	/**
+	 * Accelerate the Ant by increasing the speed.
+	 * We only want to increase the speed (by 1) if the Food level and the health level are greater than 0.
+	 * In addition, the speed of the Ant must be less than Maximum speed of the Ant.
+	 */
 	public void accelerate() {
 		for (int i=0; i < getTheWorldVector().size(); i++) {
 			if (theWorldVector.get(i) instanceof Ant) {
@@ -117,6 +122,9 @@ public class GameWorld {
 		}
 	}
 	
+	/**
+	 * Increase the clock because the clock was ticked.
+	 */
 	public void increaseGameClock() {
 		this.gameClock = this.gameClock + 1;
 	}
@@ -144,6 +152,11 @@ public class GameWorld {
 	public int getGameClock() {
 		return this.gameClock;
 	}
+	
+	/**
+	 * Print out the map of the Game by going through each of the GameObjects and listing their respective 
+	 * information.
+	 */
 	public void map() {
 		System.out.println("Printing map to console");
 		for (int i=0; i < getTheWorldVector().size(); i++) {
@@ -151,6 +164,12 @@ public class GameWorld {
 		}	
 	}
 	
+	/**
+	 * Tick the clock.
+	 * The @class Movable objects move() according to their heading and speed.
+	 * When the Ant moves its food level will decrease. If the food level reaches 0, the Ant must lose a life.
+	 * If the Ant has no lives left, the game finishes. If it has lives left, the GameWorld is reinitialized.
+	 */
 	public void tick() {
 		for (int i=0; i < getTheWorldVector().size(); i++) {
 			if (theWorldVector.get(i) instanceof Spider) {
@@ -218,7 +237,7 @@ public class GameWorld {
 		for (int i=0; i < getTheWorldVector().size(); i++) {
 			if (theWorldVector.get(i) instanceof Ant) {
 				Ant aObj = (Ant) theWorldVector.get(i);
-				if(aObj.getLastFlagReached() + 1 == flag) {
+				if(aObj.getLastFlagReached() + 1 == flag) { // the next sequential flag must be what is reached
 					aObj.setFlagReached(flag);
 					System.out.println("Highest seqNum " + this.seqNums.get(this.seqNums.size() - 1));
 					System.out.println("Last flag reached " + aObj.getLastFlagReached());
@@ -226,11 +245,16 @@ public class GameWorld {
 						System.out.println("Game Over, you win! Total time: " + this.getGameClock());
 						System.exit(0);
 					}
-				}
+				} else return;
 			}
 		}
 	}
 	
+	/**
+	 * The Ant Collided with a food station.
+	 * This causes the Ant's foodlevel to match the foodstation's capacity IF the foodstation capacity is more 
+	 * than the foodlevel of the Ant.
+	 */
 	public void collidedFoodStation() {
 		Random randomNum = new Random();
 		int randomFoodStation = 0 + randomNum.nextInt(1);
@@ -269,6 +293,12 @@ public class GameWorld {
 		}	
 	}
 	
+	/**
+	 * Ant collides with the Spider. 
+	 * When this happens the Ant's health decreases by a value of 1. If the Ant has a 0 health value after this,
+	 * it will lose a life. If the Ant has no lives left after this, it will be game over.
+	 * Otherwise,the GameWorld is reinitialized.
+	 */
 	public void collidedSpider() {
 		// decrease health level by 1 from Ant
 		for (int i=0; i < getTheWorldVector().size(); i++) {
@@ -301,6 +331,9 @@ public class GameWorld {
 		}
 	}
 	
+	/**
+	 * Display key information for the user to the terminal. 
+	 */
 	public void display() {
 		// TODO: output number of lives left, current clock value (elapsed time), highest flag number the ant has reached (lastFlagReached), and 
 		// ant's current foodLevel, and ant's healthLevel
