@@ -8,6 +8,8 @@ package com.mycompany.a2;
 import static com.codename1.ui.CN.*;
 import com.codename1.ui.*;
 import com.codename1.ui.layouts.BorderLayout;
+import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.plaf.Border;
 import com.codename1.ui.geom.Border;
 
@@ -26,6 +28,7 @@ public class Game extends Form {
 
     public Game(){
         super(new BorderLayout());
+        BorderLayout borderLayout = new BorderLayout();
 
         gw = new GameWorld(); // create "Observable" GameWorld
         mv = new MapView(); // create an "Observer" for the map
@@ -39,17 +42,21 @@ public class Game extends Form {
         mv.getAllStyles().setBorder(Border.createLineBorder(2, 0xff0000));
 
         // Create commands for each command
-        Command moveLeft = new Command("Move Left");
-        Command moveRight = new Command("Move Right");
-        Command moveUp = new Command("Move Up");
-        Command moveDown = new Command("Move Down");
+        Command accelerate = new Command("Accelerate");
+        Command left = new Command("Move Left");
+        Command brake = new Command("brake");
+        Command right = new Command("Move Right");
+        Command collideWithFlag = new Command("Collide with Flag");
+        Command collideWithSpider = new Command("Collide with Spider");
+        Command collideWithFoodStations = new Command("Collide with FoodStations");
+        Command tick = new Command("Tick");
 
         // Add commands to side menu and title bar area
         this.getToolbar().addCommandToSideMenu(moveLeft);
         this.getToolbar().addCommandToSideMenu(moveRight);
         this.getToolbar().addCommandToSideMenu(moveUp);
         this.getToolbar().addCommandToSideMenu(moveDown);
-        this.getToolbar().setTitle("Ant Game");
+        this.getToolbar().setTitle("StartToFinish Game");
 
         // Bind commands to keys
         this.addKeyListener('a', moveLeft);
@@ -58,22 +65,43 @@ public class Game extends Form {
         this.addKeyListener('s', moveDown);
 
         // Create control containers for the buttons
-        Container moveContainer = new Container();
-        moveContainer.getAllStyles().setMarginTop(10);
-        moveContainer.getAllStyles().setMarginBottom(10);
-
-        // Add buttons to the control containers
-        Button leftButton = new Button(moveLeft);
-        Button rightButton = new Button(moveRight);
-        Button upButton = new Button(moveUp);
-        Button downButton = new Button(moveDown);
-        moveContainer.add(leftButton).add(rightButton).add(upButton).add(downButton);
-
-        // Add commands to the buttons
-        leftButton.setCommand(moveLeft);
-        rightButton.setCommand(moveRight);
-        upButton.setCommand(moveUp);
-        downButton.setCommand(moveDown);
+        
+        //left side
+        Container leftButtonContainer = new Container(new BoxLayout(BoxLayout.X_AXIS));
+        Button topButton = new Button("Accelerate");
+        topButton.setCommand(accelerate);
+        Button secondButton = new Button("Left");
+        secondButton.setCommand(left);
+        leftButtonContainer.add(topButton);
+        leftButtonContainer.add(secondButton);
+        borderLayout.addLayoutComponent(BorderLayout.WEST, topButton, leftButtonContainer);
+        borderLayout.addLayoutComponent(BorderLayout.WEST, secondButton, leftButtonContainer);
+        
+        //right side
+        Container rightButtonContainer = new Container(new BoxLayout(BoxLayout.X_AXIS));
+        Button brakeButton = new Button("Brake");
+        brakeButton.setCommand(brake);
+        Button rightButton = new Button("Right");
+        rightButton.setCommand(right);
+        rightButtonContainer.add(brakeButton);
+        rightButtonContainer.add(rightButton);
+        borderLayout.addLayoutComponent(BorderLayout.EAST, brakeButton, rightButtonContainer);
+        borderLayout.addLayoutComponent(BorderLayout.EAST, rightButton, rightButtonContainer);
+        
+        //south side
+        Container southButtonContainer = new Container(new FlowLayout(Component.RIGHT));
+        Button collideWithFlagButton = new Button(collideWithFlag);
+        Button collideWithSpiderButton = new Button(collideWithSpider);
+        Button collideWithFoodStationsButton = new Button(collideWithFoodStations);
+        Button tickButton = new Button(tick);
+        southButtonContainer.add(collideWithFlagButton);
+        southButtonContainer.add(collideWithSpiderButton);
+        southButtonContainer.add(collideWithFoodStationsButton);
+        southButtonContainer.add(tickButton);
+        borderLayout.addLayoutComponent(BorderLayout.SOUTH, collideWithFlagButton, southButtonContainer);
+        borderLayout.addLayoutComponent(BorderLayout.SOUTH, collideWithSpiderButton, southButtonContainer);
+        borderLayout.addLayoutComponent(BorderLayout.SOUTH, collideWithFoodStationsButton, southButtonContainer);
+        borderLayout.addLayoutComponent(BorderLayout.SOUTH, tickButton, southButtonContainer);
 
         // Add control containers, MapView, and ScoreView to the form
         this.add(BorderLayout.CENTER, mv);
