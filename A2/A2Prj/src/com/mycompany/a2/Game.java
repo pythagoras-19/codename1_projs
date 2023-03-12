@@ -44,7 +44,13 @@ public class Game extends Form {
         Container titleBar = new Container(new BorderLayout());
         Label title = new Label("StartToFinish");
         title.setUIID("Title");
+        //help button in title bar
+        Command help = new Command("Help");
+        Button helpButton = new Button();
+        helpButton.setBadgeUIID("Help");
+        helpButton.setCommand(help);
         
+        titleBar.addComponent(BorderLayout.EAST, helpButton);
         titleBar.add(BorderLayout.CENTER, title);
 
         // Create commands for each command
