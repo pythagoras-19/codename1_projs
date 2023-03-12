@@ -7,12 +7,20 @@ import com.codename1.ui.Container;
 import com.codename1.ui.layouts.Layout;
 
 public class MapView extends Container implements Observer {
+	private int width;
+	private int height;
 	
+	public int setWidth(int width) {
+		this.width = width;
+	}
 	// Override getWidth() to call super implementation
     public int getWidth() {
         return super.getWidth();
     }
 
+    public int setHeight(int height) {
+    	this.height = height;
+    }
     // Override getHeight() to call super implementation
     public int getHeight() {
         return super.getHeight();
@@ -20,6 +28,8 @@ public class MapView extends Container implements Observer {
 
 	public MapView() {
 		// TODO Auto-generated constructor stub
+		this.width = 1000;
+		this.height = 1000;
 	}
 
 	public MapView(Layout layout) {
