@@ -11,7 +11,6 @@ import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.plaf.Border;
-import com.codename1.ui.geom.Border;
 
 import java.io.IOException;
 import com.codename1.io.NetworkEvent;
@@ -40,6 +39,13 @@ public class Game extends Form {
 
         // red border for MapView
         mv.getAllStyles().setBorder(Border.createLineBorder(2, 0xff0000));
+        
+        //title bar
+        Container titleBar = new Container(new BorderLayout());
+        Label title = new Label("StartToFinish");
+        title.setUIID("Title");
+        
+        titleBar.add(BorderLayout.CENTER, title);
 
         // Create commands for each command
         Command accelerate = new Command("Accelerate");
@@ -51,18 +57,13 @@ public class Game extends Form {
         Command collideWithFoodStations = new Command("Collide with FoodStations");
         Command tick = new Command("Tick");
 
-        // Add commands to side menu and title bar area
-        this.getToolbar().addCommandToSideMenu(moveLeft);
-        this.getToolbar().addCommandToSideMenu(moveRight);
-        this.getToolbar().addCommandToSideMenu(moveUp);
-        this.getToolbar().addCommandToSideMenu(moveDown);
-        this.getToolbar().setTitle("StartToFinish Game");
-
         // Bind commands to keys
+        /*
         this.addKeyListener('a', moveLeft);
         this.addKeyListener('d', moveRight);
         this.addKeyListener('w', moveUp);
         this.addKeyListener('s', moveDown);
+        */
 
         // Create control containers for the buttons
         
