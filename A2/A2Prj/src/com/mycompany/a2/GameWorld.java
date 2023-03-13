@@ -8,12 +8,17 @@ import com.codename1.ui.Display;
 import com.codename1.ui.Form;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Label;
+import com.codename1.ui.TextArea;
+import com.codename1.ui.TextField;
 import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.util.Resources;
 import com.codename1.io.Log;
 import com.codename1.ui.Toolbar;
+import com.codename1.ui.events.ActionListener;
+
 import java.io.IOException;
 import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.io.NetworkEvent;
 
 import static com.codename1.ui.CN.addNetworkErrorListener;
@@ -31,6 +36,9 @@ import com.codename1.charts.util.ColorUtil;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import com.codename1.ui.Button;
+import com.codename1.ui.Command;
 //
 import com.codename1.ui.Container;
 import com.codename1.ui.layouts.BorderLayout;
@@ -124,18 +132,21 @@ public class GameWorld extends Observable {
 	 * We only want to increase the speed (by 1) if the Food level and the health level are greater than 0.
 	 * In addition, the speed of the Ant must be less than Maximum speed of the Ant.
 	 */
-	/*
+	
 	public void accelerate() {
-		for (int i=0; i < getTheWorldVector().size(); i++) {
-			if (theWorldVector.get(i) instanceof Ant) {
-				Ant aObj = (Ant) theWorldVector.get(i);
-				if (aObj.getFoodLevel() > 0 && aObj.getHealthLevel() > 0 && aObj.getSpeed() < aObj.getMaximumSpeed()-1) {
-					aObj.setSpeed(aObj.getSpeed() + 1);
-				}
-			}
-		}
+	    IIterator<GameObject> iterator = gameObjects.getIterator();
+	    while (iterator.hasNext()) {
+	        GameObject obj = iterator.getNext();
+	        if (obj instanceof Ant) {
+	            Ant ant = (Ant) obj;
+	            if (ant.getFoodLevel() > 0 && ant.getHealthLevel() > 0 && ant.getSpeed() < ant.getMaximumSpeed() - 1) {
+	                ant.setSpeed(ant.getSpeed() + 1);
+	            }
+	        }
+	    }
 	}
-	*/
+
+	
 	
 	/**
 	 * Increase the clock because the clock was ticked.
@@ -190,7 +201,6 @@ public class GameWorld extends Observable {
 	 * When the Ant moves, its food level will decrease. If the food level reaches 0, the Ant must lose a life.
 	 * If the Ant has no lives left, the game finishes. If it has lives left, the GameWorld is reinitialized.
 	 */
-/*
 	public void tick() {
 		this.increaseGameClock(); // tick the clock
 		//Move the Movable objects
@@ -226,67 +236,97 @@ public class GameWorld extends Observable {
 		}
 		
 	}
-	*/
 	
 	/**
 	 * Slow down the speed of the Ant.
 	 */
 	public void brake() {
-		for (int i=0; i < getTheWorldVector().size(); i++) {
-			if (theWorldVector.get(i) instanceof Ant) {
-				Ant aObj = (Ant) theWorldVector.get(i);
-				if (aObj.getSpeed() > 1) {
-					aObj.setSpeed(aObj.getSpeed() - 1);
-				}
-			}
-		}
+	    IIterator<GameObject> iterator = gameObjects.getIterator();
+	    while (iterator.hasNext()) {
+	        GameObject obj = iterator.getNext();
+	        if (obj instanceof Ant) {
+	            Ant aObj = (Ant) obj;
+	            if (aObj.getSpeed() > 1) {
+	                aObj.setSpeed(aObj.getSpeed() - 1);
+	            }
+	        }
+	    }
 	}
+
 	
 	/**
 	 * Steer the Ant left.
 	 */
 	public void left() {
-		for (int i=0; i < getTheWorldVector().size(); i++) {
-			if (theWorldVector.get(i) instanceof Ant) {
-				Ant aObj = (Ant) theWorldVector.get(i);
-				//aObj.setHeading(aObj.getHeading() -5);
-				aObj.steer(aObj.getHeading() - 5);
-			}
-		}
+	    IIterator<GameObject> iterator = gameObjects.getIterator();
+	    while (iterator.hasNext()) {
+	        GameObject obj = iterator.getNext();
+	        if (obj instanceof Ant) {
+	            Ant ant = (Ant) obj;
+	            ant.steer(ant.getHeading() - 5);
+	        }
+	    }
 	}
+
 	
 	/**
 	 * Steer the Ant right.
 	 */
 	public void right() {
-		for (int i=0; i < getTheWorldVector().size(); i++) {
-			if (theWorldVector.get(i) instanceof Ant) {
-				Ant aObj = (Ant) theWorldVector.get(i);
-				//aObj.setHeading(aObj.getHeading() + 5);
-				aObj.steer(aObj.getHeading() + 5);
-			}
-		}
+	    IIterator<GameObject> iterator = gameObjects.getIterator();
+	    while (iterator.hasNext()) {
+	        GameObject obj = iterator.getNext();
+	        if (obj instanceof Ant) {
+	            Ant ant = (Ant) obj;
+	            ant.steer(ant.getHeading() + 5);
+	        }
+	    }
 	}
+
 	
 	/**
 	 * Execute a collision with a flag and update the Ant's lastFlagReached.
 	 * @param flag which is the desired flag reached.
 	 * Must hit the the next sequential flag on the path for it to count.
 	 */
-	public void collidedFlag(int flag) {
-		for (int i=0; i < getTheWorldVector().size(); i++) {
-			if (theWorldVector.get(i) instanceof Ant) {
-				Ant aObj = (Ant) theWorldVector.get(i);
-				if(aObj.getLastFlagReached() + 1 == flag) { // the next sequential flag must be what is reached
-					aObj.setFlagReached(flag);
-					if(aObj.getLastFlagReached() == this.seqNums.get(this.seqNums.size() - 1)) {
-						System.out.println("Game Over, you win! Total time: " + this.getGameClock());
-						System.exit(0);
-					}
-				} else return;
-			}
-		}
+	public void collidedFlag() {
+	    // Get the highest flag number
+	    int lastFlag = seqNums.get(seqNums.size() - 1);
+
+	    // Prompt the user to enter the flag number
+	    int flagNum = 0;
+	    TextField flagField = new TextField("", "", 4, TextArea.NUMERIC);
+	    Dialog.show("Enter Flag Number", FlowLayout.encloseCenterMiddle(new Label("Enter flag number (1-" + lastFlag + "):"), flagField),
+	            new Command("OK"), new Command("Cancel"));
+	    String text = flagField.getText();
+	    if (text != null && !text.isEmpty()) {
+	        flagNum = Integer.parseInt(text);
+	    }
+
+	        if (flagNum == -1 || flagNum < 1 || flagNum > lastFlag) {
+	            Dialog.show("Invalid Flag Number", "Please enter a valid flag number.", "OK", null);
+	        }
+
+	    // Check if the flag was reached by the ant
+	    IIterator<GameObject> iterator = gameObjects.getIterator();
+	    while (iterator.hasNext()) {
+	        GameObject obj = iterator.getNext();
+	        if (obj instanceof Ant) {
+	            Ant ant = (Ant) obj;
+	            if (ant.getLastFlagReached() + 1 == flagNum) {
+	                ant.setFlagReached(flagNum);
+	                if (ant.getLastFlagReached() == lastFlag) {
+	                    Dialog.show("Game Over", "You win! Total time: " + getGameClock(), "OK", null);
+	                    exit();
+	                }
+	            } else {
+	                Dialog.show("Invalid Flag", "The flag entered is not the next sequential flag to be reached.", "OK", null);
+	            }
+	        }
+	    }
 	}
+
+
 	
 	/**
 	 * The Ant Collided with a food station.
@@ -369,24 +409,6 @@ public class GameWorld extends Observable {
 		}
 	}
 	
-	/**
-	 * Display key information for the user to the terminal. 
-	 */
-	public void display() {
-		// TODO: output number of lives left, current clock value (elapsed time), highest flag number the ant has reached (lastFlagReached), and 
-		// ant's current foodLevel, and ant's healthLevel
-		System.out.println("Ant lives left: " + this.antLivesLeft);
-		System.out.println("Clock value: " + this.getGameClock());
-		
-		for (int i=0; i < getTheWorldVector().size(); i++) {
-			if (theWorldVector.get(i) instanceof Ant) {
-				Ant aObj = (Ant) theWorldVector.get(i);
-				System.out.println("Highest flag reached:" + aObj.getLastFlagReached());
-				System.out.println("Ant current food level: " + aObj.getFoodLevel());
-				System.out.println("Ant health level: " + aObj.getHealthLevel());
-			}
-		}
-	}
 	
 	public void exit() {
 		System.out.println("Are you sure you want to exit? Hit 'y' or 'n'.");
