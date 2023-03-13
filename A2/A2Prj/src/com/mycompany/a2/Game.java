@@ -50,8 +50,14 @@ public class Game extends Form {
         helpButton.setBadgeUIID("Help");
         helpButton.setCommand(help);
         
-        titleBar.addComponent(BorderLayout.EAST, helpButton);
-        titleBar.add(BorderLayout.CENTER, title);
+        Command about = new Command("About");
+        Button aboutButton = new Button();
+        aboutButton.setBadgeUIID("About");
+        aboutButton.setCommand(about);
+        
+        titleBar.addComponent(BorderLayout.NORTH, helpButton);
+        titleBar.add(BorderLayout.NORTH, title);
+        titleBar.add(BorderLayout.NORTH, about);
 
         // Create commands for each command
         Command accelerate = new Command("Accelerate");
@@ -62,14 +68,7 @@ public class Game extends Form {
         Command collideWithSpider = new Command("Collide with Spider");
         Command collideWithFoodStations = new Command("Collide with FoodStations");
         Command tick = new Command("Tick");
-
-        // Bind commands to keys
-        /*
-        this.addKeyListener('a', moveLeft);
-        this.addKeyListener('d', moveRight);
-        this.addKeyListener('w', moveUp);
-        this.addKeyListener('s', moveDown);
-        */
+        
 
         // Create control containers for the buttons
         
@@ -114,6 +113,16 @@ public class Game extends Form {
         this.add(BorderLayout.CENTER, mv);
         this.add(BorderLayout.SOUTH, BorderLayout.centerAbsolute(new Container()));
         this.add(BorderLayout.NORTH, BorderLayout.centerAbsolute(new Container()));
+        
+        // Bind commands to keys
+        this.addKeyListener('a', accelerate);
+        this.addKeyListener('b', brake);
+        this.addKeyListener('l', left);
+        this.addKeyListener('r', right);
+        this.addKeyListener('f', collideWithFoodStations);
+        this.addKeyListener('g', collideWithSpider);
+        this.addKeyListener('t', tick);
+        
 
         // Query MapView's width and height and set them as world's width and height
         int mapWidth = mv.getWidth(); // needs to be 1000
