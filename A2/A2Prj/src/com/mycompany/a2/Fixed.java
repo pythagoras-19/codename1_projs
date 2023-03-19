@@ -23,7 +23,7 @@ public abstract class Fixed extends GameObject {
 	public Point getLocation() {
 		return super.getLocation();
 	}
-	
+	/*
 	public void addToTheWorldVector(GameObject obj) {
 		super.addToTheWorldVector(obj);
 	}
@@ -31,4 +31,5 @@ public abstract class Fixed extends GameObject {
 	public ArrayList<GameObject> getTheWorldVector() {
 		return super.getTheWorldVector();
 	}
+	*/
 }

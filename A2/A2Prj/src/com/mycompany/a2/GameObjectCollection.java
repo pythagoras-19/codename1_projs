@@ -44,6 +44,13 @@ public class GameObjectCollection implements ICollection<GameObject> {
           return collection.get(index);
       }
     // rest of the class
+
+	@Override
+	public void remove() {
+		// TODO Auto-generated method stub
+		
+		
+	}
 }
 
 }

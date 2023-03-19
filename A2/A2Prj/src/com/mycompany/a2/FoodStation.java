@@ -23,6 +23,7 @@ public class FoodStation extends Fixed{
 		super(size, location, color);
 		this.capacity = size;
 	}
+	/*
 	public void addToTheWorldVector(GameObject obj) {
 		super.addToTheWorldVector(obj);
 	}
@@ -30,7 +31,7 @@ public class FoodStation extends Fixed{
 	public ArrayList<GameObject> getTheWorldVector() {
 		return super.getTheWorldVector();
 	}
-	
+	*/
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
 	}

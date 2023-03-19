@@ -34,7 +34,7 @@ public class Spider extends Movable {
 	public void move() {
 		super.move();
 	}
-	
+	/*
 	public void addToTheWorldVector(GameObject obj) {
 		super.addToTheWorldVector(obj);
 	}
@@ -42,7 +42,7 @@ public class Spider extends Movable {
 	public ArrayList<GameObject> getTheWorldVector() {
 		return super.getTheWorldVector();
 	}	
-	
+	*/
 	public void setLocation(Point location) {
 		super.setLocation(location);
 	}

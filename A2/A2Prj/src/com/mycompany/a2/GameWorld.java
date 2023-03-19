@@ -58,7 +58,6 @@ public class GameWorld extends Observable {
 	 * The variable gameClock is used to track the total time the user is playing the game.
 	 * The ArrayList seqNums holds the sequence numbers from the flags and offers access to the sequence nums.
 	 */
-	//private ArrayList<GameObject> theWorldVector = new ArrayList<GameObject>(); // TODO: Rename?
 	private GameObjectCollection gameObjects = new GameObjectCollection();
 	private int height;
 	private int width;
@@ -115,7 +114,7 @@ public class GameWorld extends Observable {
 		FoodStation foodStation1 = new FoodStation(foodStation1Size, foodStation1Location, foodStationColor);
 		FoodStation foodStation2 = new FoodStation(foodStation2Size, foodStation2Location, foodStationColor);
 		
-		// add to gameObjects
+		// add to gameObjects collection
 		gameObjects.add(ant);
 		gameObjects.add(flag1);
 		gameObjects.add(flag2);
@@ -127,12 +126,23 @@ public class GameWorld extends Observable {
 		gameObjects.add(foodStation2);
 	}
 	
+	
+	/*
+	 * Return the game objects collection
+	 */
+	public GameObjectCollection getGameObjects() {
+		return this.gameObjects;
+	}
+	
+	public void addToGameObjectCollection(GameObject obj) {
+		this.gameObjects.add(obj);
+	}
+	
 	/**
 	 * Accelerate the Ant by increasing the speed.
 	 * We only want to increase the speed (by 1) if the Food level and the health level are greater than 0.
 	 * In addition, the speed of the Ant must be less than Maximum speed of the Ant.
 	 */
-	
 	public void accelerate() {
 	    IIterator<GameObject> iterator = gameObjects.getIterator();
 	    while (iterator.hasNext()) {
@@ -144,30 +154,23 @@ public class GameWorld extends Observable {
 	            }
 	        }
 	    }
+	    this.setChanged();
+	    this.notifyObservers();
 	}
 
-	
-	
 	/**
 	 * Increase the clock because the clock was ticked.
 	 */
 	public void increaseGameClock() {
 		this.gameClock = this.gameClock + 1;
+		this.setChanged();
+	    this.notifyObservers();
 	}
-	/*
-	public void addToTheWorldVector(GameObject obj) {
-		this.theWorldVector.add(obj);
-	}
-	*/
-	
-	/*
-	public ArrayList<GameObject> getTheWorldVector() {
-		return this.theWorldVector;
-	}
-	*/
 
 	public void setAntLivesLeft(int lives) {
 		this.antLivesLeft = lives;
+		this.setChanged();
+	    this.notifyObservers();
 	}
 	
 	public int getAntLivesLeft() {
@@ -176,24 +179,13 @@ public class GameWorld extends Observable {
 	
 	public void setGameClock(int clock) {
 		this.gameClock = clock;
+		this.setChanged();
+	    this.notifyObservers();
 	}
 	
 	public int getGameClock() {
 		return this.gameClock;
 	}
-	
-	/**
-	 * Print out the map of the Game by going through each of the GameObjects and listing their respective 
-	 * information.
-	 */
-	/*
-	public void map() {
-		System.out.println("Printing map to console");
-		for (int i=0; i < getTheWorldVector().size(); i++) {
-			System.out.println(getTheWorldVector().get(i).toString());
-		}	
-	}
-	*/
 	
 	/**
 	 * Tick the clock.
@@ -202,40 +194,38 @@ public class GameWorld extends Observable {
 	 * If the Ant has no lives left, the game finishes. If it has lives left, the GameWorld is reinitialized.
 	 */
 	public void tick() {
-		this.increaseGameClock(); // tick the clock
-		//Move the Movable objects
-		for (int i=0; i < getTheWorldVector().size(); i++) {
-			if (theWorldVector.get(i) instanceof Movable) {
-				Movable mObj = (Movable) theWorldVector.get(i);
-				mObj.move();
-			}
-			// The Ant's status effects the Game's continuation 
-			// Here we calculate the new values for the Ant
-			if (theWorldVector.get(i) instanceof Ant) {
-				Ant aObj = (Ant) theWorldVector.get(i);
-				aObj.move();
-				aObj.decreaseFoodLevel();
-				if (aObj.getFoodLevel() == 0) {
-					aObj.setSpeed(0);
-					this.antLivesLeft -= 1;
-					if(this.antLivesLeft == 0) {
-						System.out.println("Game over, you failed!");
-						System.exit(0); // game over
-					} else {
-						ColorUtil.green(aObj.getColor() + 10); //lighten the red
-						aObj.setSpeed(aObj.getSpeed() - 1); 
-						for (int k=0; k < getTheWorldVector().size(); k++) {
-							this.theWorldVector.set(k, null);
-						}
-					System.gc();
-					this.init(); // still has a life left, reinitialize game world but keep clock
-					return;
-					}
-				}
-			}
-		}
-		
+	    this.increaseGameClock(); // tick the clock
+	    IIterator<GameObject> iterator = gameObjects.getIterator();
+	    while (iterator.hasNext()) {
+	        GameObject obj = iterator.getNext();
+	        if (obj instanceof Movable) {
+	            Movable mObj = (Movable) obj;
+	            mObj.move();
+	        }
+	        if (obj instanceof Ant) {
+	            Ant aObj = (Ant) obj;
+	            aObj.move();
+	            aObj.decreaseFoodLevel();
+	            if (aObj.getFoodLevel() == 0) {
+	                aObj.setSpeed(0);
+	                this.antLivesLeft -= 1;
+	                if (this.antLivesLeft == 0) {
+	                    Dialog.show("Game Over", "You failed!", "OK", null);
+	                    System.exit(0);
+	                } else {
+	                    ColorUtil.green(aObj.getColor() + 10); //lighten the red
+	                    aObj.setSpeed(aObj.getSpeed() - 1);
+	                    iterator.remove();
+	                    init();
+	                    return;
+	                }
+	            }
+	        }
+	    }
+	    this.setChanged();
+	    this.notifyObservers();
 	}
+
 	
 	/**
 	 * Slow down the speed of the Ant.
@@ -251,6 +241,8 @@ public class GameWorld extends Observable {
 	            }
 	        }
 	    }
+	    this.setChanged();
+	    this.notifyObservers();
 	}
 
 	
@@ -266,6 +258,8 @@ public class GameWorld extends Observable {
 	            ant.steer(ant.getHeading() - 5);
 	        }
 	    }
+	    this.setChanged();
+	    this.notifyObservers();
 	}
 
 	
@@ -281,6 +275,8 @@ public class GameWorld extends Observable {
 	            ant.steer(ant.getHeading() + 5);
 	        }
 	    }
+	    this.setChanged();
+	    this.notifyObservers();
 	}
 
 	
@@ -324,6 +320,8 @@ public class GameWorld extends Observable {
 	            }
 	        }
 	    }
+	    this.setChanged();
+	    this.notifyObservers();
 	}
 
 
@@ -334,42 +332,47 @@ public class GameWorld extends Observable {
 	 * than the foodlevel of the Ant.
 	 */
 	public void collidedFoodStation() {
-		Random randomNum = new Random();
-		int randomFoodStation = 0 + randomNum.nextInt(1);
-		int foodStationCounter = 0;
-		for (int i=0; i < getTheWorldVector().size(); i++) {
-			if (theWorldVector.get(i) instanceof FoodStation && (randomFoodStation == foodStationCounter)) {
-				FoodStation fObj = (FoodStation) theWorldVector.get(i);
-				if (fObj.getCapacity() > 0) {
-					// you can eat from it
-					for (int j=0; j < getTheWorldVector().size(); j++) {
-						if (theWorldVector.get(j) instanceof Ant) {
-							Ant aObj = (Ant) theWorldVector.get(j);
-							if(fObj.getCapacity() > aObj.getFoodLevel()) {
-								aObj.setFoodLevel(fObj.getCapacity());
-							}
-							fObj.setCapacity(0);
-							int emptyFoodStationColor = ColorUtil.rgb(144,238,144); // light green
-							fObj.setColor(emptyFoodStationColor);
-							// add a new food station with a new random size and location
-							int newFoodStationSize = 10 + randomNum.nextInt(50);
-							int newFoodStationColor = ColorUtil.rgb(50,50,50);
-							float randomXVal = 0 + randomNum.nextInt(1000);
-							float randomYVal = 0 + randomNum.nextInt(1000);
-							Point newFoodStationLocation = new Point(randomXVal, randomYVal);
-							//FoodStation newFoodStation = new FoodStation(newFoodStationSize, newFoodStationLocation, newFoodStationColor);
-							FoodStation newFS = new FoodStation(newFoodStationSize, newFoodStationLocation, newFoodStationColor);
-							theWorldVector.add(newFS);
-							foodStationCounter += 1;
-						}
-					}
-				}
-			}
-			else if (theWorldVector.get(i) instanceof FoodStation && !(randomFoodStation == foodStationCounter)) { // instance of FoodStation but NOT the right food station that was randomly picked
-				foodStationCounter = foodStationCounter + 1;
-			}
-		}	
+	    Random randomNum = new Random();
+	    int randomFoodStation = 0 + randomNum.nextInt(1);
+	    int foodStationCounter = 0;
+	    IIterator<GameObject> iterator = gameObjects.getIterator();
+	    while (iterator.hasNext()) {
+	        GameObject obj = iterator.getNext();
+	        if (obj instanceof FoodStation && (randomFoodStation == foodStationCounter)) {
+	            FoodStation fObj = (FoodStation) obj;
+	            if (fObj.getCapacity() > 0) {
+	                // you can eat from it
+	                IIterator<GameObject> antIterator = gameObjects.getIterator();
+	                while (antIterator.hasNext()) {
+	                    GameObject antObj = antIterator.getNext();
+	                    if (antObj instanceof Ant) {
+	                        Ant aObj = (Ant) antObj;
+	                        if (fObj.getCapacity() > aObj.getFoodLevel()) {
+	                            aObj.setFoodLevel(fObj.getCapacity());
+	                        }
+	                        fObj.setCapacity(0);
+	                        int emptyFoodStationColor = ColorUtil.rgb(144, 238, 144); // light green
+	                        fObj.setColor(emptyFoodStationColor);
+	                        // add a new food station with a new random size and location
+	                        int newFoodStationSize = 10 + randomNum.nextInt(50);
+	                        int newFoodStationColor = ColorUtil.rgb(50, 50, 50);
+	                        float randomXVal = 0 + randomNum.nextInt(1000);
+	                        float randomYVal = 0 + randomNum.nextInt(1000);
+	                        Point newFoodStationLocation = new Point(randomXVal, randomYVal);
+	                        FoodStation newFS = new FoodStation(newFoodStationSize, newFoodStationLocation, newFoodStationColor);
+	                        gameObjects.add(newFS);
+	                        foodStationCounter += 1;
+	                    }
+	                }
+	            }
+	        } else if (obj instanceof FoodStation && !(randomFoodStation == foodStationCounter)) { // instance of FoodStation but NOT the right food station that was randomly picked
+	            foodStationCounter = foodStationCounter + 1;
+	        }
+	    }
+	    this.setChanged();
+	    this.notifyObservers();
 	}
+
 	
 	/**
 	 * Ant collides with the Spider. 
@@ -378,49 +381,59 @@ public class GameWorld extends Observable {
 	 * Otherwise,the GameWorld is reinitialized.
 	 */
 	public void collidedSpider() {
-		// decrease health level by 1 from Ant
-		for (int i=0; i < getTheWorldVector().size(); i++) {
-			if (theWorldVector.get(i) instanceof Ant) {
-				Ant aObj = (Ant) theWorldVector.get(i);
-				for (int j=0; j < getTheWorldVector().size();j++) {
-					if (theWorldVector.get(j) instanceof Spider) {
-						Spider sObj = (Spider) theWorldVector.get(j);
-						sObj.setLocation(aObj.getLocation());
-					}
-				}
-				aObj.setHealthLevel(aObj.getHealthLevel() - 1);
-				aObj.setSpeed((aObj.getHealthLevel()/aObj.getMaxHealthLevel()) * aObj.getSpeed());
-				if (aObj.getSpeed() == 0 || aObj.getHealthLevel() == 0) {
-					this.antLivesLeft = this.antLivesLeft - 1;
-					if(this.antLivesLeft == 0) {
-						System.out.println("Game over, you failed!");
-						System.exit(0); // game over
-					} else {
-						ColorUtil.green(aObj.getColor() + 10); //lighten the red
-						for (int k=0; k < getTheWorldVector().size(); k++) {
-							this.theWorldVector.set(k, null);
-						}
-						System.gc();
-						this.init(); // still has a life left, reinitialize game world but keep clock
-						return;
-					}
-				}
-			}
-		}
+	    // decrease health level by 1 from Ant
+	    IIterator<GameObject> iterator = gameObjects.getIterator();
+	    while (iterator.hasNext()) {
+	        GameObject obj = iterator.getNext();
+	        if (obj instanceof Ant) {
+	            Ant aObj = (Ant) obj;
+	            IIterator<GameObject> spiderIterator = gameObjects.getIterator();
+	            while (spiderIterator.hasNext()) {
+	                GameObject spiderObj = spiderIterator.getNext();
+	                if (spiderObj instanceof Spider) {
+	                    Spider sObj = (Spider) spiderObj;
+	                    sObj.setLocation(aObj.getLocation());
+	                }
+	            }
+	            aObj.setHealthLevel(aObj.getHealthLevel() - 1);
+	            aObj.setSpeed((aObj.getHealthLevel() / aObj.getMaxHealthLevel()) * aObj.getSpeed());
+	            if (aObj.getSpeed() == 0 || aObj.getHealthLevel() == 0) {
+	                this.antLivesLeft = this.antLivesLeft - 1;
+	                if (this.antLivesLeft == 0) {
+	                    Dialog.show("Game Over", "You failed!", "OK", null);
+	                    System.exit(0);
+	                } else {
+	                    aObj.setColor(ColorUtil.GREEN); // lighten the red
+	                    // iterator.remove();
+	                    System.gc();
+	                    init(); // still has a life left, reinitialize game world but keep clock
+	                    return;
+	                }
+	            }
+	        }
+	    }
+	    this.setChanged();
+	    this.notifyObservers();
 	}
+
 	
 	
 	public void exit() {
 		System.out.println("Are you sure you want to exit? Hit 'y' or 'n'.");
+		Display.getInstance().exitApplication();
 	}
 
 	public void setWidth(int mapWidth) {
 		// TODO Auto-generated method stub
 		this.width = mapWidth;
+		this.setChanged();
+	    this.notifyObservers();
 	}
 
 	public void setHeight(int mapHeight) {
 		// TODO Auto-generated method stub
 		this.height = mapHeight;
+		this.setChanged();
+	    this.notifyObservers();
 	}
 }

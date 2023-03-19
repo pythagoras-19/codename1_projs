@@ -5,4 +5,5 @@ public interface IIterator<GameObject> {
 	GameObject getNext();
 	GameObject elementAt(int index);
 	int size();
+	void remove();
 }

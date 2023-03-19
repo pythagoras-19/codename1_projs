@@ -48,7 +48,7 @@ public class Flag extends Fixed{
 	public Point getLocation() {
 		return super.getLocation();
 	}
-	
+	/*
 	public void addToTheWorldVector(GameObject obj) {
 		super.addToTheWorldVector(obj);
 	}
@@ -56,6 +56,7 @@ public class Flag extends Fixed{
 	public ArrayList<GameObject> getTheWorldVector() {
 		return super.getTheWorldVector();
 	}
+	*/
 	
 	public void setSequenceNumber(int seqNum) {
 		this.sequenceNumber = seqNum;

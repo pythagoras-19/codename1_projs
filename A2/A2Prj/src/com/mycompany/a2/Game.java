@@ -7,12 +7,15 @@ package com.mycompany.a2;
 
 import static com.codename1.ui.CN.*;
 import com.codename1.ui.*;
+import com.codename1.ui.geom.Dimension;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.plaf.Border;
 
 import java.io.IOException;
+
+import com.codename1.charts.util.ColorUtil;
 import com.codename1.io.NetworkEvent;
 import java.lang.String; 
 import java.util.Observable;
@@ -26,40 +29,64 @@ public class Game extends Form {
     private ScoreView sv;
 
     public Game(){
-        super(new BorderLayout());
+        //super(new BorderLayout());
         BorderLayout borderLayout = new BorderLayout();
-
+        this.setLayout(borderLayout);
+        
         gw = new GameWorld(); // create "Observable" GameWorld
-        mv = new MapView(); // create an "Observer" for the map
-        sv = new ScoreView(); // create an "Observer" for the game/ant state data
+        GameWorldProxyImpl gameWorldProxy = new GameWorldProxyImpl(gw);
+        mv = new MapView(gameWorldProxy); // create an "Observer" for the map
+        sv = new ScoreView(gameWorldProxy); // create an "Observer" for the game/ant state data
 
         // Register observers with the model
         gw.addObserver(mv);
         gw.addObserver(sv);
+        
+        // mytest
+        // this.setTitle("StartToFinish");
 
         // red border for MapView
         mv.getAllStyles().setBorder(Border.createLineBorder(2, 0xff0000));
         
+        
         //title bar
-        Container titleBar = new Container(new BorderLayout());
+        Toolbar myToolBar = new Toolbar();
+        setToolbar(myToolBar);
+        TextField myTF = new TextField();
+        myToolBar.setTitle("StartToFinish");
+        Command titleBarItem1 = new Command("Help");
+        myToolBar.addCommandToRightBar(titleBarItem1);
+        
+        Container titleBarContainer = new Container(new FlowLayout(Component.CENTER));
+        titleBarContainer.getAllStyles().setBorder(Border.createLineBorder(4, ColorUtil.YELLOW));
+        //Container titleBar = new Container(new BorderLayout(Component.CENTER));
+        titleBarContainer.setUIID("TitleBar");
+        titleBarContainer.getStyle().setPadding(0, 10, 0, 10);
         Label title = new Label("StartToFinish");
+        this.setTitleComponent(new Label("StartToFinish"));
         title.setUIID("Title");
-        //help button in title bar
+        // help button in title bar
         Command help = new Command("Help");
         Button helpButton = new Button();
-        helpButton.setBadgeUIID("Help");
+        helpButton.setUIID("Help");
         helpButton.setCommand(help);
-        
-        Command about = new Command("About");
-        Button aboutButton = new Button();
-        aboutButton.setBadgeUIID("About");
-        aboutButton.setCommand(about);
-        
-        titleBar.addComponent(BorderLayout.NORTH, helpButton);
-        titleBar.add(BorderLayout.NORTH, title);
-        titleBar.add(BorderLayout.NORTH, about);
 
-        // Create commands for each command
+        Command about = new Command("About");
+        Button aboutButton = new Button("About");
+        aboutButton.setUIID("About");
+        aboutButton.setCommand(about);
+        aboutButton.addActionListener(e -> {
+            // show the about dialog
+            Dialog.show("About", "This is the StartToFinish game!", "OK", null);
+        });
+
+        titleBarContainer.add(title);
+        titleBarContainer.add(helpButton);
+        titleBarContainer.add(aboutButton);
+        
+        this.add(BorderLayout.NORTH, titleBarContainer);
+
+        // Create commands for each command not in title bar
         Command accelerate = new Command("Accelerate");
         Command left = new Command("Move Left");
         Command brake = new Command("brake");
@@ -111,8 +138,10 @@ public class Game extends Form {
 
         // Add control containers, MapView, and ScoreView to the form
         this.add(BorderLayout.CENTER, mv);
-        this.add(BorderLayout.SOUTH, BorderLayout.centerAbsolute(new Container()));
-        this.add(BorderLayout.NORTH, BorderLayout.centerAbsolute(new Container()));
+        this.add(BorderLayout.SOUTH, southButtonContainer);
+        //this.add(BorderLayout.NORTH, sv);
+        this.add(BorderLayout.EAST, rightButtonContainer);
+        this.add(BorderLayout.WEST, leftButtonContainer);
         
         // Bind commands to keys
         this.addKeyListener('a', accelerate);

@@ -64,7 +64,7 @@ public abstract class Movable extends GameObject {
 	public int getColor() {
 		return super.getColor();
 	}
-	
+	/*
 	public void addToTheWorldVector(GameObject obj) {
 		super.addToTheWorldVector(obj);
 	}
@@ -72,7 +72,7 @@ public abstract class Movable extends GameObject {
 	public ArrayList<GameObject> getTheWorldVector() {
 		return super.getTheWorldVector();
 	}
-	
+	*/
 	public void setHeading(int heading) {
 		 this.heading = heading;
 	}
